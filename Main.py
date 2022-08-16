@@ -68,7 +68,7 @@ print(f"The maximal Weight is {max_weight}.")
 
 
 #machines(initial runtime, deadline, weight)
-list_machines = [machines(4,10,5), machines(2,9,1), machines(0,12,3), machines(1,6,2)]
+list_machines = [machines(4,10,5), machines(2,9,1), machines(0,12,3)]
 
 #by adding "name=..." in the input, the list can be saved under a different name (default name is list_machines)
 list_machines = prep_machines(list_machines, save=True, prnt=True)
@@ -83,9 +83,9 @@ list_machines = prep_machines(list_machines, save=True, prnt=True)
 
 
 #jobs(list of processing times, deadline, weight)
-list_jobs = [jobs([4,7,5,8], 12, 1), jobs([1,12,14,3], 8, 2), jobs([8,8,8,8], 15, 3), 
-             jobs([9,4,2,5], 7, 4), jobs([2,2,6,3], 12, 16), jobs([5,7,2,2], 9, 12)]
-             #jobs([10,12,20,14],21, 3), jobs([15,10,8,4],6, 3)]
+list_jobs = [jobs([4,7,5], 12, 1), jobs([1,12,14], 8, 2), jobs([8,8,8], 15, 3),
+             jobs([9,4,2], 7, 4), jobs([2,2,6], 12, 16), jobs([5,7,2], 9, 12),
+             jobs([10,12,20],21, 3), jobs([15,10,8],6, 3), jobs([6,4,12],26,4)]
 
 #by adding "name=..." in the input, the list can be saved under a different name (default name is list_jobs)
 list_jobs = prep_jobs(list_jobs, save=True, prnt=True)
