@@ -505,12 +505,14 @@ def compute_all_states(jobs, machines, max_r, max_d, max_w, MVS=0, JS=0, save=Fa
     #save the computed states
     if save:
         path = f'{name}.pickle'
+    """
     else:
         MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
         JS_str = "0"*(4-len(str(JS))) + str(JS)
         path = f'MaxValuesSets/MaxValues_{MVS_str}/States_{MVS_str}/all_states_{MVS_str}_{JS_str}.pickle'
     with open(path, 'wb') as f:
         pickle.dump(all_states, f, pickle.HIGHEST_PROTOCOL)
+    """
         
     
     #measure end time
