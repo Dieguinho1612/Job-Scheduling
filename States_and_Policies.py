@@ -519,8 +519,7 @@ def compute_all_states(jobs, machines, max_r, max_d, max_w, MVS=0, JS=0, save=Fa
     #tell how much time the entire process took
     print(round(et-st,2), "seconds to compute", len(all_states), "states.")
     
-    if save:
-        return(all_states)
+     return(all_states)
 
 
 # ### Policies
