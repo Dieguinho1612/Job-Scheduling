@@ -10,6 +10,7 @@ import pickle
 from Jobs_and_Machines import *
 from States_and_Policies import *
 from Random_Generator import *
+from Data_for_NN import *
 
 
 # In[2]:
@@ -49,7 +50,13 @@ with open(random_lists_path, 'rb') as f:
 # In[7]:
 
 
-compute_all_states(list_jobs, list_machines, max_runtime, max_deadline, max_weight, MVS=MVS, JS=input)
+all_states = compute_all_states(list_jobs, list_machines, max_runtime, max_deadline, max_weight, MVS=MVS, JS=input)
+
+
+# In[ ]:
+
+
+store_MLP_data(all_states, n, m, MVS=1, JS=input)
 
 
 # Ändere Ordner Struktur zu:<br>
