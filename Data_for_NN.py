@@ -20,7 +20,7 @@ def create_MLP_data(all_states, n_max, m_max):
     for state in all_states:
         n = sum(state.jobs_remaining)
         m = sum(state.machines_on_duty)
-        if n > 0:
+        if (n == 1 and m > 1) or n > 2:
             training_dictionary[(n,m)][0].append(np.concatenate((state.input[0].flatten(),state.input[1].flatten())))
             training_dictionary[(n,m)][1].append(state.target[2]) #for regression
             #training_dictionary[(n,m)][1].append(state.target[1]) #for classification
