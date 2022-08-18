@@ -42,7 +42,7 @@ generate_random_JS(MVS, input, prnt=False)
 
 
 zeros = "0"*(4-len(str(input)))
-random_lists_path = f'MaxValuesSets/MaxValues_{MVS_str}/JobScheduling_{zeros}{input}/random_lists_{MVS_str}_{zeros}{input}.pickle'
+random_lists_path = f'MaxValuesSets/MaxValues_{MVS_str}/Jobs_and_Machines_{MVS_str}/random_lists_{MVS_str}_{zeros}{input}.pickle'
 with open(random_lists_path, 'rb') as f:
         list_jobs, list_machines = pickle.load(f)
 
