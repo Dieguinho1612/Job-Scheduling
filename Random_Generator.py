@@ -50,7 +50,7 @@ def read_max_parameters(ind, prnt=False):
     
     parameters = []
     ind_str = "0"*(2-len(str(ind))) + str(ind)
-    with open(f'MaxValuesSets/MaxValues_{ind_str}.txt', 'r') as f:
+    with open(f'MaxValuesSets/MaxValues_{ind_str}/MaxValues_{ind_str}.txt', 'r') as f:
         for line in f:
             parameters.append(int(line.split(" = ")[1]))
             if prnt:
