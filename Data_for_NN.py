@@ -46,5 +46,5 @@ def store_MLP_data(all_states, n_max, m_max , MVS, JS):
     JS_str = "0"*(4-len(str(JS))) + str(JS)
     path = f'MaxValuesSets/MaxValues_{MVS_str}/MLP_Data_{MVS_str}/MLP_data_{MVS_str}_{JS_str}.pickle'
     with open(path, 'wb') as f:
-        pickle.dump(all_states, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(MLP_data, f, pickle.HIGHEST_PROTOCOL)
 
