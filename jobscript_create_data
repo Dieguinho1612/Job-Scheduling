@@ -1,6 +1,6 @@
 #!/bin/tcsh
 #$ -cwd
-#$ -N Job Scheduling$TASK_ID
+#$ -N Job_Scheduling$TASK_ID
 #$ -o ./outputs/output$TASK_ID.txt
 #$ -j y
 #$ -l h_rt=86400
