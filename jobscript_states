@@ -1,8 +1,0 @@
-#!/bin/tcsh
-#$ -cwd
-#$ -N test$TASK_ID
-#$ -o ./test$TASK_ID.txt
-#$ -j y
-#$ -l h_rt=4000
-#S -l cpuflag_avx
-python3 JobScript_for_States.py $SGE_TASK_ID
