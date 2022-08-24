@@ -7,6 +7,7 @@
 import numpy as np
 import pickle
 import random
+import time
 #import necessary notebooks
 #import import_ipynb
 from Jobs_and_Machines import *
@@ -68,6 +69,9 @@ def state_target(state):
 #we set a maximum to how many data points we want to have for each (n,m)-situation with Job i being the optimal action
 def create_data(all_states, data_points_max, save=False):
     
+    #measure start time
+    st = time.time()
+    
     #will be a tuple consisting of inputs list and targets list
     data_dictionary = dict(((n_state,m_state),([],[])) 
                            for n_state in range(2,n+1) for m_state in range(1,m+1))
@@ -87,6 +91,13 @@ def create_data(all_states, data_points_max, save=False):
                 state_target(state)
                 data_dictionary[(n_state,m_state)][1].append(state.target[2])
                 data_points_counter[(n_state,m_state,opt_action)] += 1
+                
+    #measure end time
+    et = time.time()
+    
+    #tell how much the entire process took
+    print(round(et-st,2), "seconds to compute", sum(len(data_dictionary[key]) for key in data_dictionary), "data points.")
+    
     if save:
         with open('data.pickle', 'wb') as f:
             pickle.dump(data_dictionary, f, pickle.HIGHEST_PROTOCOL)
