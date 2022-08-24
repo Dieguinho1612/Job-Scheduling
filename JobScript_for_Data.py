@@ -7,6 +7,7 @@
 
 
 import sys
+import os
 import pickle
 #import import_ipynb
 from Jobs_and_Machines import *
