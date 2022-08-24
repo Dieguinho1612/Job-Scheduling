@@ -4,5 +4,5 @@
 #$ -o ./outputs/output$TASK_ID.txt
 #$ -j y
 #$ -l h_rt=86400
-#S -l cpuflag_avx
+#S -pe mp 4 -l cluster2
 python3 JobScript_for_Data.py $SGE_TASK_ID
