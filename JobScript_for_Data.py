@@ -50,7 +50,8 @@ input = sys.argv[1]
 
 #check if data points have already been created
 zeros = "0"*(4-len(str(input)))
-data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{zeros}{input}.pickle'
+#data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{zeros}{input}.pickle'
+data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/DataLists_{MVS_str}_{zeros}{input}'
 if os.path.exists(data_file_path):
     print("Data Points already exist.")
     sys.exit() #abort program execution in this case
@@ -112,7 +113,7 @@ Global_Variables.set_var_to_global({'list_jobs':list_jobs,
 # In[12]:
 
 
-from States_and_Policies import *
+from States_and_Policies_copmressed import *
 
 
 # In[13]:
@@ -126,13 +127,13 @@ all_states = compute_all_states(list_jobs, list_machines, MVS=MVS, JS=input)
 # In[14]:
 
 
-from Data_for_NN import *
+from Data_for_NN_compressed import *
 
 
 # In[15]:
 
 
-data_points_max = 1000
+data_points_max = 100
 
 
 # In[16]:

@@ -1,0 +1,160 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[5]:
+
+
+import numpy as np
+import pickle
+import random
+import time
+#import necessary notebooks
+#import import_ipynb
+from Jobs_and_Machines import *
+from States_and_Policies_compressed import *
+from Global_Variables import *
+
+
+# In[6]:
+
+
+#take information of state to create normalized data for Neural Network
+def state_input(state):
+    
+    #normalized information about the jobs
+    jobs_data = np.asarray([[(proc_time/max_runtime) for i, proc_time in enumerate(job.processing_time)
+                             if state.machine_information[i] != None]
+                            + [max(job.deadline-state.time,0)/max_deadline,
+                               job.weight/max_weight]
+                            for job in list_jobs if state.jobs_remaining[job.index] == 1])
+    
+    #normalized information about the machines
+    machines_data = np.asarray([[state.machine_information[machine.index]/max_runtime,
+                                 max(machine.deadline-state.time,0)/max_deadline,
+                                 machine.weight/max_weight] 
+                                for machine in list_machines if state.machine_information[machine.index] != None])
+                             
+    #sort them and save permutation
+    machines_perm = machines_data[:,0].argsort() #sort machines by remaining runtime
+    orig_order = np.arange(len(machines_perm)) #just an array of the form [0,1,...,m_state-1]
+    jobs_data[:,orig_order] = jobs_data[:,machines_perm] #reorder processing time of jobs by new order of machines
+    jobs_perm = jobs_data[:,0].argsort() #order of jobs by processing time for current free machine
+    jobs_data = jobs_data[jobs_perm] #sort jobs by this order
+    machines_data = machines_data[machines_perm] #sort machines by their remaining runtime
+    
+    #merge
+    state.input = [jobs_data, machines_data]
+    state.permutation = [jobs_perm,machines_perm]
+
+
+# In[7]:
+
+
+def state_target(state):
+    
+    #number of remaining jobs
+    n_state = sum(state.jobs_remaining)
+    #get Qvalues of all feasible actions
+    target = np.array([qvalue for qvalue in state.Qvalues if qvalue != None])
+    #sort by permutation
+    target[np.arange(n_state)] = target[state.permutation[0]]
+    state.target = [target, 
+                    np.eye(target.shape[0])[np.argmin(target)], #one_hot_vector of optimal action
+                   np.min(target)/target] #normalize by scaling through minimum value and then taking inverse value
+
+
+# In[9]:
+
+
+#we set a maximum to how many data points we want to have for each (n,m)-situation with Job i being the optimal action
+def create_data(all_states, data_points_max, save=False):
+    
+    #measure start time
+    st = time.time()
+    
+    #will be a tuple consisting of inputs list and targets list
+    data_dictionary = dict(((n_state,m_state),([],[])) 
+                           for n_state in range(2,n+1) for m_state in range(1,m+1))
+    #counter of how many data points there are already for each job i to be the optimal action (+option of machine shut down)
+    data_points_counter = dict(((n_state,m_state,i),0) 
+                               for i in range(n+1) for n_state in range(2,n+1) for m_state in range(1,m+1))
+    
+    #create data for states
+    for state in all_states:
+        n_state = sum(state.jobs_remaining)
+        m_state = sum(x is not None for x in state.machine_information)
+        if n_state > 1:
+            opt_action = minimum(state)[1][0] #which job action corresponds to minimum cost
+            if data_points_counter[(n_state,m_state,opt_action)] < data_points_max:
+                state_input(state)
+                data_dictionary[(n_state,m_state)][0].append(state.input)
+                state_target(state)
+                data_dictionary[(n_state,m_state)][1].append(state.target[2])
+                data_points_counter[(n_state,m_state,opt_action)] += 1
+                
+    #measure end time
+    et = time.time()
+    
+    #tell how much the entire process took
+    print(round(et-st,2), "seconds to compute", sum(len(data_dictionary[key][0]) for key in data_dictionary), "data points.")
+    
+    if save:
+        with open('data.pickle', 'wb') as f:
+            pickle.dump(data_dictionary, f, pickle.HIGHEST_PROTOCOL)
+            
+    return data_dictionary
+
+
+# In[ ]:
+
+
+def store_data(all_states, data_points_max, MVS, JS):
+    
+    data = create_data(all_states, data_points_max)
+    
+    MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
+    JS_str = "0"*(4-len(str(JS))) + str(JS)
+    path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/DataLists_{MVS_str}_{JS_str}'
+    os.mkdir(path)
+    for key in data:
+        path_file = f'{path}/{key}_data-list_{MVS_str}_{JS_str}.pickle'
+        with open(path_file, 'wb') as f:
+            pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
+
+
+# In[2]:
+
+
+"""def create_MLP_data(all_states, n_max, m_max):
+    training_dictionary = dict(((n+1,m+1),([],[])) for n in range(n_max) for m in range(m_max))
+    for state in all_states:
+        n = sum(state.jobs_remaining)
+        m = sum(state.machines_on_duty)
+        if (n == 1 and m > 1) or n > 2:
+            training_dictionary[(n,m)][0].append(np.concatenate((state.input[0].flatten(),state.input[1].flatten())))
+            training_dictionary[(n,m)][1].append(state.target[2]) #for regression
+            #training_dictionary[(n,m)][1].append(state.target[1]) #for classification
+            #training_dictionary[(n,m)][1].append(Softmax(state.target[2])) #for mix
+
+    for tupl in training_dictionary:
+        (x, y) = training_dictionary[tupl]
+        #print(len([np.concatenate(x)]), len([np.concatenate(y)]))
+        if x:
+            training_dictionary[tupl] = ([np.stack(x)],[np.stack(y)])
+        
+    return training_dictionary""";
+
+
+# In[ ]:
+
+
+"""def store_MLP_data(all_states, n_max, m_max , MVS, JS):
+    
+    MLP_data = create_MLP_data(all_states, n_max, m_max)
+    
+    MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
+    JS_str = "0"*(4-len(str(JS))) + str(JS)
+    path = f'MaxValuesSets/MaxValues_{MVS_str}/MLP_Data_{MVS_str}/MLP_data_{MVS_str}_{JS_str}.pickle'
+    with open(path, 'wb') as f:
+        pickle.dump(MLP_data, f, pickle.HIGHEST_PROTOCOL)""";
+
