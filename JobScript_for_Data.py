@@ -113,7 +113,7 @@ Global_Variables.set_var_to_global({'list_jobs':list_jobs,
 # In[12]:
 
 
-from States_and_Policies_copmressed import *
+from States_and_Policies_compressed import *
 
 
 # In[13]:
