@@ -4,5 +4,6 @@
 #$ -o ./outputs/output$TASK_ID.txt
 #$ -j y
 #$ -l h_rt=86400
-#S -pe mp 4 -l cluster2
+#$ -pe mp 8 -l cluster26
+#S -l mem_free=512G
 python3 JobScript_for_Data.py $SGE_TASK_ID
