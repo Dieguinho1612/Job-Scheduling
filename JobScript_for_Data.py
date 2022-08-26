@@ -50,8 +50,8 @@ input = sys.argv[1]
 
 #check if data points have already been created
 zeros = "0"*(4-len(str(input)))
-#data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{zeros}{input}.pickle'
-data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/DataLists_{MVS_str}_{zeros}{input}'
+data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{zeros}{input}.pickle'
+#data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/DataLists_{MVS_str}_{zeros}{input}'
 if os.path.exists(data_file_path):
     print("Data Points already exist.")
     sys.exit() #abort program execution in this case
