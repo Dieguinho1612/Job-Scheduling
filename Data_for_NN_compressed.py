@@ -115,13 +115,9 @@ def store_data(all_states, data_points_max, MVS, JS):
     
     MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
     JS_str = "0"*(4-len(str(JS))) + str(JS)
-    path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/DataLists_{MVS_str}_{JS_str}'
-    os.mkdir(path)
-    for key in data:
-        path_file = f'{path}/{key}_data-list_{MVS_str}_{JS_str}.pickle'
-        with open(path_file, 'wb') as f:
+    path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{JS_str}.pickle'
+    with open(path, 'wb') as f:
             pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
-
 
 # In[2]:
 
