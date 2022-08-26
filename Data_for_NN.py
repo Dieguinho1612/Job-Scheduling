@@ -97,7 +97,7 @@ def create_data(all_states, data_points_max, save=False):
     et = time.time()
     
     #tell how much the entire process took
-    print(round(et-st,2), "seconds to compute", sum(len(data_dictionary[key]) for key in data_dictionary), "data points.")
+    print(round(et-st,2), "seconds to compute", sum(len(data_dictionary[key][0]) for key in data_dictionary), "data points.")
     
     if save:
         with open('data.pickle', 'wb') as f:
