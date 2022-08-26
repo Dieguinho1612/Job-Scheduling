@@ -6,6 +6,7 @@
 
 import numpy as np
 import pickle
+import os
 import random
 import time
 #import necessary notebooks
