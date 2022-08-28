@@ -4,6 +4,6 @@
 #$ -N Job_Scheduling$TASK_ID
 #$ -o ./outputs/output$TASK_ID.txt
 #$ -j y
-#$ -l h_rt=86400
+#$ -l h_rt=160000
 #$ -pe mp 2 -l mem_free=48G
 python3 JobScript_for_Data.py $SGE_TASK_ID
