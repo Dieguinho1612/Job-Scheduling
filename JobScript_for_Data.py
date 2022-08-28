@@ -113,7 +113,7 @@ Global_Variables.set_var_to_global({'list_jobs':list_jobs,
 # In[12]:
 
 
-from States_and_Policies_compressed import *
+from States_and_Policies import *
 
 
 # In[13]:
@@ -127,7 +127,7 @@ all_states = compute_all_states(list_jobs, list_machines, MVS=MVS, JS=input)
 # In[14]:
 
 
-from Data_for_NN_compressed import *
+from Data_for_NN import *
 
 
 # In[15]:
