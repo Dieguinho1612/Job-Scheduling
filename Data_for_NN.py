@@ -85,8 +85,11 @@ def create_data(all_states, data_points_max, save=False):
         n_state = sum(state.jobs_remaining)
         m_state = sum(state.machines_on_duty)
         if n_state > 1:
-            opt_action = minimum(state)[1][0] #which job action corresponds to minimum cost
-            if data_points_counter[(n_state,m_state,opt_action)] < data_points_max:
+            #find out which of the n_state jobs + machine shut down is best action
+            rev_target = np.array([qvalue for qvalue in state.Qvalues[::-1] if qvalue != None])
+            opt_action = len(rev_target) - np.argmin(rev_target) - 1 #reversed for emphasis on higher indices equality cases
+            #opt_action = minimum(state)[1][0] #which job action corresponds to minimum cost
+            if data_points_counter[(n_state,m_state,opt_action)] < data_points_max/n_state:
                 state_input(state)
                 data_dictionary[(n_state,m_state)][0].append(state.input)
                 state_target(state)
