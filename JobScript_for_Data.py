@@ -31,8 +31,8 @@ MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
 # In[4]:
 
 
-n = 9
-m = 3
+n = 8
+m = 4
 max_init_runtime = 10
 max_runtime = 20
 max_deadline = 30
