@@ -81,15 +81,15 @@ class states:
         self.machine_runtimes = machine_runtimes #remaining runtime of every machine
         
         #predecessor and successors
-        self.ID = None #ID of the state, will be given after all states were created
+        #self.ID = None #ID of the state, will be given after all states were created
         self.predecessor = predecessor #what was the predecessor state
         self.machine = None
-        self.successors = None #the successor states will be added when creating the entire tree of states
+        self.successors = 0 #the successor states will be added when creating the entire tree of states
         
         #costs and actions
         self.costs = None #cost to transition from the predecessor state to the current one
         self.action = (None, None) #action to transition from the predecessor state to the current one
-        self.transition_dic = {}
+        #self.transition_dic = {}
         
         #optimal future costs
             #will be added after all states were created
@@ -99,8 +99,8 @@ class states:
         self.Qvalues = [None]*(n+1)
         
         #data for Neural Network
-        self.input = None
-        self.target = None
+        #self.input = None
+        #self.target = None
 
 
 # ### Creation of all States
@@ -117,7 +117,7 @@ def create_all_states():#list_jobs,list_machines):
     
     #create initial state
     initial_state = create_initial_state()
-    ID = 0
+    #ID = 0
     
     #list of current states
     current_states = [initial_state]
@@ -133,8 +133,8 @@ def create_all_states():#list_jobs,list_machines):
         for state in current_states:
             
             #give ID
-            state.ID = ID
-            ID += 1
+            #state.ID = ID
+            #ID += 1
             
             #list of all successors of this state
             state_successors = []
@@ -170,7 +170,7 @@ def create_all_states():#list_jobs,list_machines):
                         
                 
             #add successor list to the attributes of state
-            state.successors = state_successors
+            state.successors = len(state_successors)
             
             #add successors of this state to the list of all successors of all current states
             successor_states += state_successors
@@ -257,7 +257,7 @@ def assign_job(state,job,machine):
 
         
     #add successor state to transition dictionary
-    state.transition_dic[(job.index,machine.index)] = successor_state    
+    #state.transition_dic[(job.index,machine.index)] = successor_state    
     
     return successor_state
 
@@ -308,7 +308,7 @@ def turn_off_machine(state, machine):
         
         
     #add successor state to transition dictionary
-    state.transition_dic[(n,machine.index)] = successor_state
+    #state.transition_dic[(n,machine.index)] = successor_state
         
     return successor_state
 
@@ -410,7 +410,7 @@ def backtracking(all_states):
     
     for state in states_to_backtrack:
         #how many successors of this node have already been backtracked
-        state.backtracking = - len(state.successors) #we will count upwards until zero
+        state.backtracking = - state.successors #we will count upwards until zero
                 
     while states_to_backtrack:
         #states that are temporary final in regard to backtracking (all their successors have backtracked already)
