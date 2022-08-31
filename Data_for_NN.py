@@ -73,23 +73,32 @@ def create_data(all_states, data_points_max, save=False):
     #measure start time
     st = time.time()
     
+    #the minimum amount of jobs and machines a state has to have for us to be interesteing enough to save its data
+    n_min = 4
+    m_min = 2
+    
     #will be a tuple consisting of inputs list and targets list
     data_dictionary = dict(((n_state,m_state),([],[])) 
-                           for n_state in range(2,n+1) for m_state in range(1,m+1))
+                           for n_state in range(n_min,n+1) for m_state in range(m_min,m+1))
     #counter of how many data points there are already for each job i to be the optimal action (+option of machine shut down)
     data_points_counter = dict(((n_state,m_state,i),0) 
-                               for i in range(n+1) for n_state in range(2,n+1) for m_state in range(1,m+1))
+                               for n_state in range(n_min,n+1) for m_state in range(m_min,m+1) for i in range(n_state+1))
+    
+    #permutations that will be added in data later on
+    #we add the max_runtime+1 as last entry, so that "n" (=turning off machine) is always the last entry of permutation
+    permutations = [np.argsort([job.processing_time[i] for job in list_jobs]+[max_runtime+1]) for i in range(m)]
     
     #create data for states
     for state in all_states:
         n_state = sum(state.jobs_remaining)
         m_state = sum(state.machines_on_duty)
-        if n_state > 3 and m_state > 1:
+        if n_state >= n_min and m_state >= m_min:
             #find out which of the n_state jobs + machine shut down is best action
-            rev_target = np.array([qvalue for qvalue in state.Qvalues[::-1] if qvalue != None])
-            opt_action = len(rev_target) - np.argmin(rev_target) - 1 #reversed for emphasis on higher indices equality cases
+            #rev_perm_target = np.array([state.Qvalues[i] for i in permutations[state.machine] if state.Qvalues[i] != None][::-1])
+            rev_perm_target = np.array([qvalue for qvalue in np.array(state.Qvalues)[permutations[state.machine]][::-1] if qvalue != None])
+            opt_action = len(rev_perm_target) - np.argmin(rev_perm_target) - 1 #reversed for emphasis on higher indices equality cases
             #opt_action = minimum(state)[1][0] #which job action corresponds to minimum cost
-            if data_points_counter[(n_state,m_state,opt_action)] < data_points_max/len(rev_target) + 1:
+            if data_points_counter[(n_state,m_state,opt_action)] < data_points_max/len(rev_perm_target):
                 state_input(state)
                 data_dictionary[(n_state,m_state)][0].append(state.input)
                 state_target(state)
