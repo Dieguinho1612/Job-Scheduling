@@ -43,6 +43,7 @@ max_weight = 10
 
 
 input = sys.argv[1]
+input = int(input) - 1
 
 
 # In[ ]:
