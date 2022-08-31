@@ -74,7 +74,7 @@ def create_data(all_states, data_points_max, save=False):
     st = time.time()
     
     #the minimum amount of jobs and machines a state has to have for us to be interesteing enough to save its data
-    n_min = 4
+    n_min = 3
     m_min = 2
     
     #will be a tuple consisting of inputs list and targets list

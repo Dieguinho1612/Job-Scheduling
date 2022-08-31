@@ -18,7 +18,7 @@ from Jobs_and_Machines import *
 # In[2]:
 
 
-MVS = 1
+MVS = 5
 MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
 
 
@@ -33,8 +33,8 @@ MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
 
 n = 8
 m = 4
-max_init_runtime = 10
-max_runtime = 20
+max_init_runtime = 15
+max_runtime = 30
 max_deadline = 30
 max_weight = 10
 
@@ -85,7 +85,7 @@ from Random_Generator import *
 
 #create txt file of parameters and required folders if they dont exist already
 generate_max_values_sets(MVS)
-
+#sys.exit()
 
 # In[9]:
 
