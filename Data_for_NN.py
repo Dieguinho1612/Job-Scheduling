@@ -98,8 +98,8 @@ def create_data(all_states, data_points_max, save=False):
             rev_perm_target = np.array([qvalue for qvalue in np.array(state.Qvalues)[permutations[state.machine]][::-1] if qvalue != None])
             opt_action = len(rev_perm_target) - np.argmin(rev_perm_target) - 1 #reversed for emphasis on higher indices equality cases
             #opt_action = minimum(state)[1][0] #which job action corresponds to minimum cost
-            if len(data_dictionary[(n_state,m_state)][1]) < data_points_max:
-            #if data_points_counter[(n_state,m_state,opt_action)] < data_points_max/len(rev_perm_target):
+            if data_points_counter[(n_state,m_state,opt_action)] < data_points_max/len(rev_perm_target):
+            #if len(data_dictionary[(n_state,m_state)][1]) < data_points_max: #use this condition instead if you want to create test/validation data without balancing
                 state_input(state)
                 data_dictionary[(n_state,m_state)][0].append(state.input)
                 state_target(state)
