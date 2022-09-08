@@ -1,6 +1,0 @@
-n = 8        
-m = 4        
-max_init_runtime = 10        
-max_runtime = 20        
-max_deadline = 30        
-max_weight = 10

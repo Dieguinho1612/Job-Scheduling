@@ -121,7 +121,7 @@ def generate_random_machines(m, max_init_runtime, max_deadline, max_weight, prnt
     #generate machines with random deadlines, weights and initial runtimes up to the defined maximal value
     random_list_machines = [machines(rand_init_runtimes[i],
                                      random.randint(0,max_deadline), 
-                                     random.randint(0,max_weight))
+                                     random.randint(1,max_weight))
                             for i in range(m)]
     #appropietly prepare machines
     if prnt:
@@ -139,7 +139,7 @@ def generate_random_jobs(n, m, max_runtime, max_deadline, max_weight, prnt=False
     #generate jobs with random processing times, deadlines and weights up to the defined maximal value (processing time > 0)
     random_list_jobs = [jobs([random.randint(1,max_runtime) for i in range(m)], 
                              random.randint(0,max_deadline), 
-                             random.randint(0,max_weight)) 
+                             random.randint(1,max_weight)) 
                         for j in range(n)]
     
     #appropietly prepare jobs
@@ -156,13 +156,14 @@ def generate_random_jobs(n, m, max_runtime, max_deadline, max_weight, prnt=False
 def generate_random_JS(MVS, JS, prnt=False):
     
     #read in parameters from MaxValuesSet
-    [n,m,max_init_runtime,max_runtime,max_deadline,max_weight] = read_max_parameters(MVS, prnt=prnt)
+    #[n,m,max_init_runtime,max_runtime,max_deadline,max_weight] = read_max_parameters(MVS, prnt=prnt)
     
     #generate list of random machines with random initial runtimes
     random_list_machines = generate_random_machines(m, max_init_runtime, max_deadline, max_weight, prnt=prnt)
     #generate list of random jobs
     random_list_jobs = generate_random_jobs (n, m, max_runtime, max_deadline, max_weight, prnt=prnt)
     
+    """
     #save the generated lists
     MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
     JS_str = "0"*(4-len(str(JS))) + str(JS)
@@ -170,9 +171,9 @@ def generate_random_JS(MVS, JS, prnt=False):
     with open(path, 'wb') as f:
         pickle.dump((random_list_jobs, 
                      random_list_machines), 
-                    f, pickle.HIGHEST_PROTOCOL)
+                    f, pickle.HIGHEST_PROTOCOL)"""
     
-    #return random_list_jobs, random_list_machines
+    return random_list_jobs, random_list_machines
 
 
 # In[8]:

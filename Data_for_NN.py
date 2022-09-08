@@ -22,19 +22,26 @@ from Global_Variables import *
 #take information of state to create normalized data for Neural Network
 def state_input(state):
     
-    #normalized information about the jobs
-    jobs_data = np.asarray([[(proc_time/max_runtime) for i, proc_time in enumerate(job.processing_time)
+    #information about the jobs (normalized in weight)
+    jobs_data = np.asarray([[proc_time for i, proc_time in enumerate(job.processing_time)
                              if state.machines_on_duty[i] == 1]
-                            + [max(job.deadline-state.time,0)/max_deadline,
+                            + [max(job.deadline-state.time,0),
                                job.weight/max_weight]
-                            for job in list_jobs if state.jobs_remaining[job.index] == 1])
+                            for job in list_jobs if state.jobs_remaining[job.index] == 1], dtype=np.float32)
     
-    #normalized information about the machines
-    machines_data = np.asarray([[state.machine_runtimes[machine.index]/max_runtime,
-                                 max(machine.deadline-state.time,0)/max_deadline,
-                                 machine.weight/max_weight] 
-                                for machine in list_machines if state.machines_on_duty[machine.index] == 1])
-                             
+    #information about the machines (normalized in weight)
+    machines_data = np.asarray([[state.machine_runtimes[machine.index],
+                                 max(machine.deadline-state.time,0),
+                                 machine.weight/max_weight]
+                                for machine in list_machines if state.machines_on_duty[machine.index] == 1], dtype=np.float32)
+    
+    #we need to know the maximum runtime or deadline to scale the data
+    max_time = max(np.max(jobs_data[:,:-1]), np.max(machines_data[:,:-1])) #:-1 because the last column is the weight
+    
+    #normlalize time data
+    jobs_data[:,:-1] /= max_time
+    machines_data[:,:-1] /= max_time
+    
     #sort them and save permutation
     machines_perm = machines_data[:,0].argsort() #sort machines by remaining runtime
     orig_order = np.arange(len(machines_perm)) #just an array of the form [0,1,...,m_state-1]
@@ -56,11 +63,11 @@ def state_target(state):
     #number of remaining jobs
     n_state = sum(state.jobs_remaining)
     #get Qvalues of all feasible actions
-    target = np.array([qvalue for qvalue in state.Qvalues if qvalue != None])
+    target = np.array([qvalue for qvalue in state.Qvalues if qvalue != None], dtype=np.float32)
     #sort by permutation
     target[np.arange(n_state)] = target[state.permutation[0]]
     state.target = [target, 
-                    np.eye(target.shape[0])[np.argmin(target)], #one_hot_vector of optimal action
+                    np.eye(target.shape[0], dtype=np.float32)[np.argmin(target)], #one_hot_vector of optimal action
                    np.min(target)/target] #normalize by scaling through minimum value and then taking inverse value
 
 
@@ -122,13 +129,13 @@ def create_data(all_states, data_points_max, save=False):
 # In[ ]:
 
 
-def store_data(all_states, data_points_max, MVS, JS):
+def store_data(all_states, data_points_max, DS, MVS):
     
     data = create_data(all_states, data_points_max)
     
-    MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
-    JS_str = "0"*(4-len(str(JS))) + str(JS)
-    path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{JS_str}.pickle'
+    DS_str = "0"*(2-len(str(DS))) + str(DS)
+    MVS_str = "0"*(4-len(str(MVS))) + str(MVS)
+    path = f'Data/DataSet_{DS_str}/data_{DS_str}_{MVS_str}.pickle'
     with open(path, 'wb') as f:
             pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
