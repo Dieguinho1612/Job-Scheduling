@@ -9,6 +9,7 @@
 import sys
 import os
 import pickle
+import random
 #import import_ipynb
 from Jobs_and_Machines import *
 
@@ -18,44 +19,43 @@ from Jobs_and_Machines import *
 # In[2]:
 
 
-MVS = 1
-MVS_str = "0"*(2-len(str(MVS))) + str(MVS)
+DS = 1
+DS_str = "0"*(2-len(str(DS))) + str(DS)
 
 
 # In[3]:
 
 
-"""[n,m,max_init_runtime,max_runtime,max_deadline,max_weight] = read_max_parameters(MVS)""";
+if not os.path.exists('Data'):
+    os.mkdir('Data')
+    os.mkdir(f'Data/DataSet_{DS_str}')
+    sys.exit()
+elif not os.path.exists(f'Data/DataSet_{DS_str}'):
+    os.mkdir(f'Data/DataSet_{DS_str}')
+    sys.exit()
 
 
 # In[4]:
 
 
-n = 8
-m = 4
-max_init_runtime = 10
-max_runtime = 20
-max_deadline = 30
-max_weight = 10
-
-
-# In[5]:
-
-
-input = sys.argv[1]
-input = int(input) - 1
+n = 6
+m = 3
 
 
 # In[ ]:
 
 
-#check if data points have already been created
-zeros = "0"*(4-len(str(input)))
-data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/data_{MVS_str}_{zeros}{input}.pickle'
-#data_file_path = f'MaxValuesSets/MaxValues_{MVS_str}/Data_{MVS_str}/DataLists_{MVS_str}_{zeros}{input}'
-if os.path.exists(data_file_path):
-    print("Data Points already exist.")
-    sys.exit() #abort program execution in this case
+max_weight = 10
+max_deadline = 30
+max_runtime = random.randint(round(max_deadline/3),round(max_deadline*1.5))
+max_init_runtime = random.randint(round(max_runtime/3), max_runtime)
+
+
+# In[5]:
+
+
+#input = sys.argv[1]
+input = int(input) - 1
 
 
 # ## Pass Parameters as Global Variables to imported Notebooks
@@ -84,21 +84,22 @@ from Random_Generator import *
 
 
 #create txt file of parameters and required folders if they dont exist already
-generate_max_values_sets(MVS)
-#sys.exit()
+#generate_max_values_sets(MVS)
+
 
 # In[9]:
 
 
-generate_random_JS(MVS, input, prnt=False)
+list_jobs, list_machines = generate_random_JS(DS, input, prnt=False)
 
 
 # In[10]:
 
 
+"""zeros = "0"*(4-len(str(input)))
 random_lists_path = f'MaxValuesSets/MaxValues_{MVS_str}/Jobs_and_Machines_{MVS_str}/random_lists_{MVS_str}_{zeros}{input}.pickle'
 with open(random_lists_path, 'rb') as f:
-        list_jobs, list_machines = pickle.load(f)
+        list_jobs, list_machines = pickle.load(f)""";
 
 
 # In[11]:
@@ -120,7 +121,7 @@ from States_and_Policies import *
 # In[13]:
 
 
-all_states = compute_all_states(list_jobs, list_machines, MVS=MVS, JS=input)
+all_states = compute_all_states(list_jobs, list_machines, MVS=DS, JS=input)
 
 
 # ## Save Data
@@ -146,7 +147,7 @@ random.shuffle(all_states)
 # In[17]:
 
 
-store_data(all_states, data_points_max,MVS=MVS,JS=input)
+store_data(all_states, data_points_max, DS, input)
 
 
 # ## Back-Up-Code
