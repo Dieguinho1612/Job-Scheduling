@@ -38,8 +38,8 @@ elif not os.path.exists(f'Data/DataSet_{DS_str}'):
 # In[4]:
 
 
-n = 6
-m = 3
+n = 8
+m = 4
 
 
 # In[ ]:
