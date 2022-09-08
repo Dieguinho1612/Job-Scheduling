@@ -54,7 +54,7 @@ max_init_runtime = random.randint(round(max_runtime/3), max_runtime)
 # In[5]:
 
 
-#input = sys.argv[1]
+input = sys.argv[1]
 input = int(input) - 1
 
 
