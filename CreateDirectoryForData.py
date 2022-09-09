@@ -11,8 +11,8 @@ import sys
 # In[1]:
 
 
-start = sys.argv[1]
-end = sys.argv[2]
+start = int(sys.argv[1])
+end = int(sys.argv[2])
 DS_numbers = list(range(start,end+1))
 
 
