@@ -16,30 +16,34 @@ from Jobs_and_Machines import *
 
 # ## Set JS Environment
 
-# In[2]:
-
-
-DS = 1
-DS_str = "0"*(2-len(str(DS))) + str(DS)
-
-
-# In[3]:
-
-
-if not os.path.exists('Data'):
-    os.mkdir('Data')
-    os.mkdir(f'Data/DataSet_{DS_str}')
-    sys.exit()
-elif not os.path.exists(f'Data/DataSet_{DS_str}'):
-    os.mkdir(f'Data/DataSet_{DS_str}')
-    sys.exit()
-
-
 # In[4]:
 
 
 n = 8
 m = 4
+
+
+# In[5]:
+
+
+input = sys.argv[1]
+input = int(input) - 1
+
+
+# In[22]:
+
+
+DS = 1
+DS += input // 10000
+DS_str = "0"*(2-len(str(DS))) + str(DS)
+
+
+# In[24]:
+
+
+if input % 10000 == 200 and DS > 1:
+    from GitUpload import *
+    upload_git_repo(DS-1)
 
 
 # In[ ]:
@@ -49,13 +53,6 @@ max_weight = 10
 max_deadline = 30
 max_runtime = random.randint(round(max_deadline/3),round(max_deadline*1.5))
 max_init_runtime = random.randint(round(max_runtime/3), max_runtime)
-
-
-# In[5]:
-
-
-input = sys.argv[1]
-input = int(input) - 1
 
 
 # ## Pass Parameters as Global Variables to imported Notebooks
