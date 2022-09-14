@@ -40,10 +40,10 @@ DS_str = "0"*(2-len(str(DS))) + str(DS)
 
 # In[24]:
 
-
+"""
 if input % 10000 == 200 and DS > 1:
     from GitUpload import *
-    upload_git_repo(DS-1)
+    upload_git_repo(DS-1)"""
 
 
 # In[ ]:
